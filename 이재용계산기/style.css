@@ -1,0 +1,300 @@
+:root {
+    --samsung-blue: #034EA2;
+    --samsung-dark: #000000;
+    --bg-color: #f1f4f8;
+    --card-bg: #ffffff;
+    --text-primary: #333333;
+    --text-secondary: #757575;
+    --accent-red: #ff4d4d;
+    --accent-green: #2ecc71;
+    --font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(135deg, #f1f4f8 0%, #e2e8f0 100%);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #fff;
+    padding: 30px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 5px solid var(--samsung-blue);
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--samsung-dark);
+}
+
+.balance-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(to right, var(--samsung-blue), #0077c2);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(3, 78, 162, 0.2);
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.item-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.item-img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.item-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.item-price {
+    color: var(--samsung-blue);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: background-color 0.2s;
+    flex: 1;
+}
+
+.btn-sell {
+    background-color: #eee;
+    color: #333;
+}
+
+.btn-sell:hover:not(:disabled) {
+    background-color: #ddd;
+}
+
+.btn-buy {
+    background-color: var(--samsung-blue);
+    color: white;
+}
+
+.btn-buy:hover:not(:disabled) {
+    background-color: #023c7d;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.item-count {
+    width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.receipt {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.receipt h2 {
+    margin-bottom: 30px;
+    font-size: 2rem;
+}
+
+.receipt-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.receipt-total {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--samsung-blue);
+}
+
+/* Locked Item Styles */
+.item-card.locked {
+    filter: grayscale(1);
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
+    user-select: none;
+}
+
+.item-card.locked::after {
+    content: '🔒 Locked';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    z-index: 10;
+}
+
+/* Victory Modal Styles */
+.victory-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.victory-content {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    box-shadow: 0 0 50px rgba(3, 78, 162, 0.5);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.victory-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: var(--samsung-blue);
+}
+
+.victory-message {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.btn-restart {
+    background: var(--samsung-blue);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-restart:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .balance-bar {
+        font-size: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+}

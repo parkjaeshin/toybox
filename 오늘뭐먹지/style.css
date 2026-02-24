@@ -1,0 +1,246 @@
+:root {
+    --bg-color: #050505;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --accent-color: #ff4d4d;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --font-main: 'Outfit', 'Noto Sans KR', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 77, 77, 0.1) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(80px);
+}
+
+.container {
+    text-align: center;
+    z-index: 1;
+}
+
+.header {
+    margin-bottom: 3rem;
+    animation: fadeInDown 1s ease-out;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #fff, #ff4d4d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Card Styles */
+.card-wrapper {
+    perspective: 1500px;
+    position: relative;
+    width: 320px;
+    height: 480px;
+}
+
+.card {
+    width: 320px;
+    height: 480px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: grab;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+    transform-style: preserve-3d;
+    touch-action: none;
+    user-select: none;
+}
+
+/* 스택 아래 카드들 */
+.card[data-stack="1"] {
+    transform: translateY(8px) scale(0.97);
+    filter: brightness(0.7);
+    pointer-events: none;
+    cursor: default;
+}
+
+.card[data-stack="2"] {
+    transform: translateY(16px) scale(0.94);
+    filter: brightness(0.5);
+    pointer-events: none;
+    cursor: default;
+}
+
+.card[data-stack="3"] {
+    transform: translateY(22px) scale(0.91);
+    filter: brightness(0.3);
+    pointer-events: none;
+    cursor: default;
+}
+
+.card:active {
+    cursor: grabbing;
+}
+
+.card.dragging {
+    transition: none;
+}
+
+.card.thrown {
+    pointer-events: none;
+    animation: throw-away 0.8s forwards cubic-bezier(0.1, 0.5, 0.5, 1);
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+@keyframes throw-away {
+    0% {
+        transform: translate(var(--exit-x), var(--exit-y)) rotate(var(--exit-rotate));
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(calc(var(--exit-x) * 2), calc(var(--exit-y) + 500px)) rotate(calc(var(--exit-rotate) * 2));
+        opacity: 0;
+    }
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.card-front {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-image {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+.card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 1.5rem;
+    text-align: left;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.food-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.food-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.back-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.back-content p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.draw-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-family: var(--font-main);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+}
+
+.draw-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(255, 77, 77, 0.5);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

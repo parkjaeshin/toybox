@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>창 상태 모니터 - 선생님몰래춤추는학생 | Neal.fun 모작</title>
+    <meta name="description" content="브라우저 창의 위치, 가시성, 포커스 상태를 실시간으로 감지하고 기록하는 도구입니다. 창이 최소화되거나 다른 탭으로 이동하면 상태가 변합니다.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Window State Monitor</h1>
+        <p class="subtitle">실시간 창 상태 감지 플랫폼</p>
+
+        <div class="grid">
+            <div class="card" id="pos-card">
+                <div class="card-icon">📍</div>
+                <h3>창 위치 (Coordinates)</h3>
+                <div class="value-group">
+                    <div class="value-item">
+                        <span class="label">X (Screen Left)</span>
+                        <span id="pos-x" class="value">0</span>
+                    </div>
+                    <div class="value-item">
+                        <span class="label">Y (Screen Top)</span>
+                        <span id="pos-y" class="value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="vis-card">
+                <div class="card-icon">👁️</div>
+                <h3>가시성 (Visibility)</h3>
+                <div class="status-indicator" id="vis-status">Visible</div>
+                <p class="desc">최소화되거나 다른 탭으로 이동하면 상태가 바뀝니다.</p>
+            </div>
+
+            <div class="card" id="focus-card">
+                <div class="card-icon">🎯</div>
+                <h3>포커스 (Focus)</h3>
+                <div class="status-indicator" id="focus-status">Focused</div>
+                <p class="desc">다른 창을 클릭하면 상태가 바뀝니다.</p>
+            </div>
+        </div>
+
+        <div class="log-container">
+            <h3>상태 로그</h3>
+            <div id="event-log" class="log-content">
+                <div class="log-entry">시스템 초기화 완료...</div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

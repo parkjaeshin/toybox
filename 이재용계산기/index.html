@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이재용 회장 돈 쓰기 - Spend Lee Jae-yong's Money</title>
+    <meta name="description" content="이재용 삼성 회장의 15조원을 마음껏 써보세요! 다양한 아이템을 구매하며 천문학적인 재산 규모를 체험하는 인터랙티브 게임입니다.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="lee_jae_yong.png" alt="이재용 회장" class="profile-img">
+            <h1>이재용 회장 돈 쓰기</h1>
+        </header>
+
+        <div class="balance-bar" id="balance">
+            ₩15,000,000,000,000
+        </div>
+
+        <main class="item-grid" id="item-grid">
+            <!-- Items filled by JavaScript -->
+        </main>
+
+        <section class="receipt" id="receipt-container" style="display: none;">
+            <h2>Your Receipt</h2>
+            <ul id="receipt-list" class="receipt-list">
+                <!-- Receipt items -->
+            </ul>
+            <div class="receipt-total">
+                <span>TOTAL</span>
+                <span id="receipt-total-value">₩0</span>
+            </div>
+        </section>
+    </div>
+
+    <div id="victory-modal" class="victory-modal">
+        <div class="victory-content">
+            <h2 class="victory-title">🎉 축하합니다!</h2>
+            <p class="victory-message">이재용 회장의 모든 재산을 소진하셨습니다!<br>이제 이재용 회장은 빈털터리가 되었습니다.</p>
+            <button class="btn-restart" onclick="location.reload()">다시 하기</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

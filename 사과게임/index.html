@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사과게임 - 숫자 합 10 퍼즐 | Neal.fun 모작</title>
+    <meta name="description" content="숫자 합이 10이 되도록 사과를 드래그하여 점수를 획득하는 중독성 있는 퍼즐 게임. 제한 시간 안에 최대한 많은 점수를 획득하세요!">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="main-layout">
+        <div id="game-container">
+            <div id="game-board"></div>
+            <div id="drag-box"></div>
+            <div id="game-overlay">
+                <button id="start-btn">게임 시작</button>
+            </div>
+        </div>
+        <div id="side-panel">
+            <div class="panel-item">합계: <span id="total-sum">0</span></div>
+            <hr>
+            <div class="panel-item">점수: <span id="game-score">0</span>점</div>
+            <hr>
+            <div class="controls">
+                <button id="pause-btn" disabled>일시 정지</button>
+                <button id="restart-btn">재시작</button>
+            </div>
+        </div>
+    </div>
+    <div id="timer-container">
+        <div id="timer-bar"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
