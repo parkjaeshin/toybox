@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사과 쓰리매치 서바이벌 테스트</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="game-area">
+            <div id="grid" class="grid-container"></div>
+        </div>
+        <div class="control-panel">
+            <h2>테스트 패널</h2>
+            <button id="btn-add">랜덤 오브젝트 추가</button>
+
+            <div id="selection-list" class="selection-container">
+                <h3>선택된 아이템 <span id="selection-score-total"
+                        style="font-size: 14px; color: #ff5722; margin-left: 5px;">(합계: 0)</span></h3>
+                <div id="selection-items-box" class="items-box">
+                    <!-- 자바스크립트가 여기에 아이템 썸네일을 렌더링합니다 -->
+                </div>
+            </div>
+
+            <button id="btn-clear" class="danger">모든 오브젝트 삭제</button>
+        </div>
+    </div>
+
+    <!-- 스크립트 로드 순서 유의 -->
+    <script src="object.js"></script>
+    <script src="inputManager.js"></script>
+    <script src="gridManager.js"></script>
+    <script src="gameManager.js"></script>
+</body>
+
+</html>
