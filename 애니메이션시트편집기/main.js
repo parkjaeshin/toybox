@@ -1,4 +1,4 @@
-import { parseGIF, decompressFrames } from 'https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/+esm';
+import { parseGIF, decompressFrames } from 'gifuct-js';
 
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
