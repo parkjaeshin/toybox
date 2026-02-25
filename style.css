@@ -2,7 +2,7 @@
 
 :root {
     --bg-color: #b1875d;
-    --card-bg: #9f6f31;
+    --card-bg: #c0b7ab;
     --text-color: #1a1a1b;
     --accent-color: #007bff;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -27,7 +27,7 @@ body {
 header {
     text-align: center;
     padding: 60px 20px;
-    background: linear-gradient(135deg, #ffffff 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, #000000 0%, #e9ecef 100%);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 

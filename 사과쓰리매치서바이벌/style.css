@@ -1,9 +1,9 @@
 :root {
     --cell-size: 60px;
     --grid-gap: 5px;
-    --grid-bg-color: #313030;
-    --grid-cell-color: #2c2c2c;
-    --bg-color: #6b6b6b;
+    --grid-bg-color: #473d39;
+    --grid-cell-color: #000000;
+    --bg-color: #000000;
 }
 
 body {
@@ -20,7 +20,7 @@ body {
 .container {
     display: flex;
     gap: 40px;
-    background: white;
+    background: rgb(0, 0, 0);
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
