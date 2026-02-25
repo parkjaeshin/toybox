@@ -7,6 +7,8 @@ const infoDim = document.getElementById('info-dim');
 const infoFrames = document.getElementById('info-frames');
 const convertBtn = document.getElementById('convert-btn');
 const columnsInput = document.getElementById('columns-input');
+const widthInput = document.getElementById('width-input');
+const heightInput = document.getElementById('height-input');
 const resultSection = document.getElementById('result-section');
 const resultCanvas = document.getElementById('result-canvas');
 const downloadBtn = document.getElementById('download-btn');
@@ -73,7 +75,18 @@ async function handleFile(file) {
         frames = rawFrames;
 
         // Suggest column count (sqrt of frames)
-        columnsInput.value = Math.ceil(Math.sqrt(frameCount));
+        const suggestedCols = Math.ceil(Math.sqrt(frameCount));
+        const suggestedRows = Math.ceil(frameCount / suggestedCols);
+
+        columnsInput.value = suggestedCols;
+
+        // Suggest optimal power-of-two square size based on frames and columns
+        const rawWidth = width * suggestedCols;
+        const rawHeight = height * suggestedRows;
+        const suggestedSize = nextPowerOfTwo(Math.max(rawWidth, rawHeight));
+
+        widthInput.value = suggestedSize;
+        heightInput.value = suggestedSize;
 
     } catch (error) {
         console.error('Error parsing GIF:', error);
@@ -154,22 +167,20 @@ async function convertToSpriteSheet() {
     try {
         const { width, height, frameCount } = currentGif;
 
-        // Use user defined columns
+        // Use user defined columns and manual PNG dimensions
         const cols = parseInt(columnsInput.value) || 1;
-        const rows = Math.ceil(frameCount / cols);
+        const finalWidth = parseInt(widthInput.value) || 1024;
+        const finalHeight = parseInt(heightInput.value) || 1024;
+
+        if (cols < 1 || finalWidth < 1 || finalHeight < 1) {
+            alert('모든 입력값은 최소 1 이상이어야 합니다.');
+            return;
+        }
 
         // 1. Coalesce frames first to look correct
         const renderedFrames = coalesceFrames(frames, width, height);
 
-        // 2. Calculate ideal dimensions
-        const rawWidth = width * cols;
-        const rawHeight = height * rows;
-
-        // 3. Round up to nearest power of 2
-        const finalWidth = nextPowerOfTwo(rawWidth);
-        const finalHeight = nextPowerOfTwo(rawHeight);
-
-        // 4. Set up result canvas
+        // 2. Set up result canvas
         resultCanvas.width = finalWidth;
         resultCanvas.height = finalHeight;
         const ctx = resultCanvas.getContext('2d');
@@ -177,14 +188,15 @@ async function convertToSpriteSheet() {
         // Clear canvas with transparent black (default)
         ctx.clearRect(0, 0, resultCanvas.width, resultCanvas.height);
 
-        // 5. Draw frames onto grid starting from top-left (0,0)
+        // 3. Draw frames onto grid starting from top-left (0,0)
+        // Note: Arrangement depends ONLY on 'cols'
         renderedFrames.forEach((frameCanvas, index) => {
             const x = (index % cols) * width;
             const y = Math.floor(index / cols) * height;
             ctx.drawImage(frameCanvas, x, y);
         });
 
-        // Update info display with final dimensions if necessary
+        // Update info display with final dimensions
         document.getElementById('info-dim').textContent = `${width} x ${height} ➔ ${finalWidth} x ${finalHeight} px`;
 
         // 6. Show result

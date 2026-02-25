@@ -601,6 +601,8 @@
   var infoFrames = document.getElementById("info-frames");
   var convertBtn = document.getElementById("convert-btn");
   var columnsInput = document.getElementById("columns-input");
+  var widthInput = document.getElementById("width-input");
+  var heightInput = document.getElementById("height-input");
   var resultSection = document.getElementById("result-section");
   var resultCanvas = document.getElementById("result-canvas");
   var downloadBtn = document.getElementById("download-btn");
@@ -650,7 +652,14 @@
       resultSection.classList.add("hidden");
       currentGif = { width, height, frameCount };
       frames = rawFrames;
-      columnsInput.value = Math.ceil(Math.sqrt(frameCount));
+      const suggestedCols = Math.ceil(Math.sqrt(frameCount));
+      const suggestedRows = Math.ceil(frameCount / suggestedCols);
+      columnsInput.value = suggestedCols;
+      const rawWidth = width * suggestedCols;
+      const rawHeight = height * suggestedRows;
+      const suggestedSize = nextPowerOfTwo(Math.max(rawWidth, rawHeight));
+      widthInput.value = suggestedSize;
+      heightInput.value = suggestedSize;
     } catch (error) {
       console.error("Error parsing GIF:", error);
       alert("GIF \uD30C\uC77C\uC744 \uCC98\uB9AC\uD558\uB294 \uC911\uC5D0 \uC624\uB958\uAC00 \uBC1C\uC0DD\uD588\uC2B5\uB2C8\uB2E4.");
@@ -696,12 +705,13 @@
     try {
       const { width, height, frameCount } = currentGif;
       const cols = parseInt(columnsInput.value) || 1;
-      const rows = Math.ceil(frameCount / cols);
+      const finalWidth = parseInt(widthInput.value) || 1024;
+      const finalHeight = parseInt(heightInput.value) || 1024;
+      if (cols < 1 || finalWidth < 1 || finalHeight < 1) {
+        alert("\uBAA8\uB4E0 \uC785\uB825\uAC12\uC740 \uCD5C\uC18C 1 \uC774\uC0C1\uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4.");
+        return;
+      }
       const renderedFrames = coalesceFrames(frames, width, height);
-      const rawWidth = width * cols;
-      const rawHeight = height * rows;
-      const finalWidth = nextPowerOfTwo(rawWidth);
-      const finalHeight = nextPowerOfTwo(rawHeight);
       resultCanvas.width = finalWidth;
       resultCanvas.height = finalHeight;
       const ctx = resultCanvas.getContext("2d");
