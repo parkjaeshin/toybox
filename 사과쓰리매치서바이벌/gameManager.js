@@ -2,6 +2,9 @@
 // 싱글톤 패턴으로 하나만 유지
 const gridManager = new GridManager();
 
+// 점수 상태 관리 전역 변수
+let totalScore = 0;
+
 // 버튼 요소 가져오기
 const btnAdd = document.getElementById('btn-add');
 const btnClear = document.getElementById('btn-clear');

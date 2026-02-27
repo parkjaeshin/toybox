@@ -158,25 +158,73 @@ function clearAllObjects() {
 function removeItems(itemsToRemove) {
     if (!itemsToRemove || itemsToRemove.length === 0) return;
 
-    // 1. 데이터 및 화면 DOM 즉각 삭제
-    itemsToRemove.forEach(itemEl => {
+    const animations = itemsToRemove.map(itemEl => {
+
         const row = parseInt(itemEl.dataset.row);
         const col = parseInt(itemEl.dataset.col);
+
+        // 1. 데이터 먼저 제거
         objArr[row][col] = null;
 
-        if (itemEl.parentNode) {
-            // 이펙트를 주려면 여기서 css 클래스를 추가 후 setTimeout으로 삭제해도 됩니다.
-            itemEl.parentNode.removeChild(itemEl);
-        }
+        // 2. 랜덤 X 방향 추가 (게임 느낌)
+        const randomX = (Math.random() - 0.5) * 150;
+
+        // 3. 포물선 애니메이션 실행 (Promise 반환)
+        return parabolaDrop(itemEl, 700, randomX, 500);
     });
 
-    // 2. 삭제로 발생한 빈 공간 위쪽의 아이템을 바닥으로 당기기 (중력)
-    applyGravity();
-
-    // 3. 중력이 어느정도 적용되는 시간을 준 후, 상단 공간에 새 오브젝트 채우기
-    setTimeout(() => {
+    // 4. 전부 끝난 뒤 중력 실행
+    Promise.all(animations).then(() => {
+        applyGravity();
         fillEmptySpaces();
-    }, 250); // 아이템이 떨어지는 CSS 애니메이션(transition 0.4s) 중간 쯤에 생성
+    });
+}
+function parabolaDrop(element, duration = 1500, distanceX = 0, dropDistance = 500, jumpPower = 300) {
+    return new Promise(resolve => {
+
+        const start = performance.now();
+
+        const gravity = (2 * (dropDistance + jumpPower)) / (duration * duration);
+        const initialVelocityY = -Math.sqrt(2 * gravity * jumpPower);
+        const velocityX = distanceX / duration;
+
+        function animate(now) {
+            const elapsed = now - start;
+
+            if (elapsed >= duration) {
+                element.style.transform =
+                    `translate(${distanceX}px, ${dropDistance}px)`;
+                element.style.opacity = 0;
+                element.remove();
+                resolve();
+                return;
+            }
+
+            const x = velocityX * elapsed;
+            const y = initialVelocityY * elapsed + 0.5 * gravity * elapsed * elapsed;
+
+            element.style.transform = `translate(${x}px, ${y}px)`;
+            element.style.opacity = 1 - (elapsed / duration);
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    });
+}
+
+// 점수 추가 및 UI 업데이트 (gameManager.js의 전역 변수 totalScore 활용)
+function addScore(scoreToAdd) {
+    if (typeof totalScore !== 'undefined') {
+        totalScore += scoreToAdd;
+        console.log(`점수 추가됨: +${scoreToAdd} ➡️ 현재 총점: ${totalScore}`);
+
+        // UI 엘리먼트 업데이트
+        const scoreUI = document.getElementById('global-total-score');
+        if (scoreUI) {
+            scoreUI.innerText = totalScore;
+        }
+    }
 }
 
 function GridManager() {
@@ -186,6 +234,7 @@ function GridManager() {
     return {
         addRandomObject,
         clearAllObjects,
-        removeItems
+        removeItems,
+        addScore
     }
 }

@@ -76,6 +76,9 @@ header p {
 .card-image {
     height: 100%;
     background-color: #e9ecef;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;

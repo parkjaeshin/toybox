@@ -92,27 +92,7 @@ function InputManager() {
 
         console.log("드래그 완료! 최종 선택된 아이템 개수:", selectedItemsList.length);
 
-        // --- 1. 최종 합계 점수 검사 ---
-        let totalScore = 0;
-        selectedItemsList.forEach(itemEl => {
-            const row = parseInt(itemEl.dataset.row);
-            const col = parseInt(itemEl.dataset.col);
-            const obj = objArr[row][col];
-            if (obj && typeof obj.score === 'number') {
-                totalScore += obj.score;
-            }
-        });
-
-        // 10점 달성 여부 체크
-        if (totalScore === 10) {
-            console.log("합계 10점 달성! 아이템을 삭제합니다.");
-            // gameManager에서 선언한 전역 변수 gridManager 의 삭제 함수 호출
-            if (typeof gridManager !== 'undefined') {
-                gridManager.removeItems(selectedItemsList);
-            }
-        }
-
-        //더 많은 조건을 추가하고, 유저가 여러 전략을 선택하도록 만들 계획
+        check();
 
         // --- 2. 드래그가 끝나면 임시 리스트 비우고, 시각적 피드백 중지 ---
         // 생성된 시각적 피드백을 모두 원래대로 복구 
@@ -127,6 +107,66 @@ function InputManager() {
         // 배열 초기화 및 우측 UI 리스트도 빈 상태로 다시 렌더링
         selectedItemsList = [];
         renderSelectionList();
+    }
+
+    function check() {
+        // --- 1. 최종 합계 점수 검사 ---
+        let totalScore = 0;
+        let isRemoved = false; // 삭제 여부 플래그
+
+        selectedItemsList.forEach(itemEl => {
+            const row = parseInt(itemEl.dataset.row);
+            const col = parseInt(itemEl.dataset.col);
+            const obj = objArr[row][col];
+            if (obj && typeof obj.score === 'number') {
+                totalScore += obj.score;
+            }
+        });
+
+        // 10점 달성 여부 체크
+        if (totalScore === 10) {
+            console.log("합계 10점 달성! 아이템을 삭제합니다.");
+            // gameManager에서 선언한 전역 변수 gridManager 의 삭제 함수 호출
+            if (typeof gridManager !== 'undefined') {
+                gridManager.addScore(100); // 예: 10점 달성 시 기본 100점 획득
+                gridManager.removeItems(selectedItemsList);
+                isRemoved = true;
+            }
+        }
+
+        // 리스트에 담긴 아이템 개수 체크 (10점 달성으로 이미 삭제되지 않은 경우에만)
+        if (!isRemoved && selectedItemsList.length >= 3) {
+            // 아이템의 속성 종류(type)가 모두 같은지 확인
+            let isSameType = true;
+
+            // 전역 objArr에서 첫 번째 아이템의 타입을 가져옴
+            const firstRow = parseInt(selectedItemsList[0].dataset.row);
+            const firstCol = parseInt(selectedItemsList[0].dataset.col);
+            const firstObj = objArr[firstRow][firstCol];
+            const firstType = firstObj ? firstObj.type : null;
+
+            for (let i = 1; i < selectedItemsList.length; i++) {
+                const r = parseInt(selectedItemsList[i].dataset.row);
+                const c = parseInt(selectedItemsList[i].dataset.col);
+                const obj = objArr[r][c];
+
+                if (!obj || obj.type !== firstType) {
+                    isSameType = false;
+                    break;
+                }
+            }
+
+            // 만약 리스트에 담긴 아이템의 종류가 모두 같다면(타입이 한 종류라면)
+            if (isSameType && firstType !== null) {
+                console.log("선택된 아이템의 종류가 모두 같습니다! 아이템을 삭제합니다.");
+                if (typeof gridManager !== 'undefined') {
+                    // 예: 같은 속성 제거 시 개수당 50점
+                    const earnedScore = selectedItemsList.length * 50;
+                    gridManager.addScore(earnedScore);
+                    gridManager.removeItems(selectedItemsList);
+                }
+            }
+        }
     }
 
     // 드래그 박스 CSS 스타일 업데이트 헬퍼
