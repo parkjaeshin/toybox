@@ -29,16 +29,31 @@ function InputManager() {
         document.addEventListener('mouseup', onMouseUp);
 
         // 터치 디바이스 지원 (모바일 고려 시)
-        gridElement.addEventListener('touchstart', (e) => onMouseDown(e.touches[0]));
-        document.addEventListener('touchmove', (e) => onMouseMove(e.touches[0]));
+        gridElement.addEventListener('touchstart', (e) => {
+            // 터치는 touchmove에서 preventDefault를 호출하기 위해 active하게 처리
+            onMouseDown(e.touches[0]);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                // 드래그 중일 때만 스크롤 방지
+                if (e.cancelable) e.preventDefault();
+                onMouseMove(e.touches[0]);
+            }
+        }, { passive: false });
         document.addEventListener('touchend', onMouseUp);
     }
 
     function onMouseDown(e) {
         if (!gridElement) return;
 
-        // 기본 드래그(텍스트 선택 등) 방지
-        e.preventDefault && e.preventDefault();
+        // 게임 진행 중이 아니거나 일시정지 상태면 드래그 방지
+        if (!window.isGameRunning || window.isPaused) return;
+
+        // 마우스 이벤트일 때만 preventDefault 호출 (터치는 위에서 별도로 처리하거나 필요 시 여기서 처리)
+        // touch 객체에는 preventDefault가 없으므로 체크 후 호출
+        if (e && typeof e.preventDefault === 'function') {
+            e.preventDefault();
+        }
 
         isDragging = true;
         selectedItemsList = []; // 새로운 드래그 시작 시 리스트 초기화
@@ -274,9 +289,31 @@ function InputManager() {
     // HTML이 모두 로드된 후 실행하기 위해 설정(js 파일 로딩 시점에 주의)
     document.addEventListener('DOMContentLoaded', init);
 
+    function forceCancelDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+
+        // UI에서 드래그 박스 제거
+        if (dragBoxElement && dragBoxElement.parentNode) {
+            dragBoxElement.parentNode.removeChild(dragBoxElement);
+        }
+
+        // 아이템 스타일 복구
+        selectedItemsList.forEach(itemEl => {
+            if (itemEl.parentNode) {
+                itemEl.style.opacity = '1';
+                itemEl.style.transform = 'scale(1)';
+            }
+        });
+
+        selectedItemsList = [];
+        renderSelectionList();
+    }
+
     // 외부로 노출할 인터페이스들 (필요하다면)
     return {
-        getSelectedItems: () => selectedItemsList
+        getSelectedItems: () => selectedItemsList,
+        forceCancelDrag
     }
 }
 

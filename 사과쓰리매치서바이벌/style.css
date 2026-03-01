@@ -15,6 +15,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    /* 모바일 스크롤 방지 */
+    touch-action: none;
+    overflow: hidden;
 }
 
 
@@ -33,6 +36,7 @@ body {
     transform: translate(-50%, -50%);
     /* 완벽 중앙 */
     z-index: 1;
+    pointer-events: none;
 }
 
 .game-area {
@@ -41,6 +45,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1;
+    /* 모바일 스크롤 및 브라우저 제스처 방지 */
+    touch-action: none;
 }
 
 .grid-container {
@@ -99,23 +105,105 @@ body {
 }
 
 
-/* 컨트롤 패널 스타일 */
-.control-panel {
+/* 게임 전체 래퍼 */
+.game-wrapper {
     display: flex;
-    left: 0;
-    position: absolute;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
-    min-width: 250px;
     z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
 }
 
-.control-panel h2 {
-    margin: 0 0 10px 0;
-    font-size: 20px;
-    color: #333;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+/* 상단 정보 영역 */
+.top-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 하단 정보 영역 */
+.bottom-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* 타이머 바 스타일 */
+.timer-container {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.timer-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.1s linear, background-color 0.3s;
+}
+
+.timer-bar.warning {
+    background-color: #ff9800;
+}
+
+.timer-bar.danger {
+    background-color: #f44336;
+}
+
+/* 오버레이 스크린 (시작/일시정지 화면) */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    /* 그리드 위 */
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
+}
+
+.start-btn {
+    padding: 15px 30px;
+    font-size: 24px;
+    background-color: #e91e63;
+    animation: pulse 1.5s infinite;
+}
+
+.start-btn:hover {
+    background-color: #c2185b;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.7);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(233, 30, 99, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+    }
 }
 
 button {
@@ -131,23 +219,19 @@ button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
+button:hover:not(:disabled) {
     background-color: #45a049;
     transform: translateY(-2px);
 }
 
-button:active {
+button:active:not(:disabled) {
     transform: translateY(0);
 }
 
-button.danger {
-    background-color: #f44336;
-    margin-top: auto;
-    /* 패널 하단으로 밀어냄 */
-}
-
-button.danger:hover {
-    background-color: #da190b;
+button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 /* 드래그 박스 스타일 */
