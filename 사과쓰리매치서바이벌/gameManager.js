@@ -21,10 +21,44 @@ const timerBar = document.getElementById('timer-bar');
 
 // 초기화: 게임 화면이 로드되면 먼저 랜덤 오브젝트를 꽉 채워둠
 document.addEventListener('DOMContentLoaded', () => {
+    // 반응형 스케일 적용
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
     setTimeout(() => {
         gridManager.addRandomObject();
     }, 100);
 });
+
+// 화면 크기에 맞춰 전체 게임 크기를 조절하는 함수
+function handleResize() {
+    const wrapper = document.querySelector('.game-wrapper');
+    if (!wrapper) return;
+
+    // 현재 뷰포트 크기
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    // 기준이 되는 게임의 너비 (그리드 너비 + 여백 약 540px)
+    const baseWidth = 540;
+    // 기준이 되는 게임의 높이 (상단정보 + 그리드 + 하단정보 약 850px)
+    // 실제 요소의 높이를 측정하여 사용
+    const baseHeight = wrapper.scrollHeight || 850;
+
+    // 가로/세로 중 더 많이 줄여야 하는 비율을 선택
+    const scaleX = (viewportWidth * 0.95) / baseWidth;
+    const scaleY = (viewportHeight * 0.95) / baseHeight;
+
+    // 너무 커지지 않도록 최대 1배 (PC에서는 원래 크기), 모바일에서는 꽉 차게
+    const scale = Math.min(scaleX, scaleY, 1);
+
+    // 전역 변수에 저장 (inputManager에서 좌표 계산 시 사용)
+    window.gameScale = scale;
+
+    // CSS transform으로 스케일 조정
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.transformOrigin = 'center center';
+}
 
 // 게임 시작 버튼 이벤트
 btnStart.addEventListener('click', () => {

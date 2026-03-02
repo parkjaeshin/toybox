@@ -62,8 +62,9 @@ function InputManager() {
         const rect = gridElement.getBoundingClientRect();
 
         // gridElement 내부 기준(상대 좌표)으로 시작점 저장
-        startX = e.clientX - rect.left;
-        startY = e.clientY - rect.top;
+        const currentScale = window.gameScale || 1;
+        startX = (e.clientX - rect.left) / currentScale;
+        startY = (e.clientY - rect.top) / currentScale;
 
         // 시각적 박스 초기화 및 표시
         updateDragBoxStyles(startX, startY, 0, 0);
@@ -76,9 +77,9 @@ function InputManager() {
         const rect = gridElement.getBoundingClientRect();
 
         // 현재 마우스 위치 (그리드 내부 상대 좌표)
-        // 그리드 영역을 벗어난 드래그도 부드럽게 처리하기 위해 제한(clamp) 처리
-        let currentX = e.clientX - rect.left;
-        let currentY = e.clientY - rect.top;
+        const currentScale = window.gameScale || 1;
+        let currentX = (e.clientX - rect.left) / currentScale;
+        let currentY = (e.clientY - rect.top) / currentScale;
 
         // 그리드 경계 내로 제한
         currentX = Math.max(0, Math.min(currentX, rect.width));
