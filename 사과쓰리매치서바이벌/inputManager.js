@@ -66,6 +66,10 @@ function InputManager() {
         startX = (e.clientX - rect.left) / currentScale;
         startY = (e.clientY - rect.top) / currentScale;
 
+        // 그리드 영역 내부로 시작점 제한 (unscaled 기준)
+        startX = Math.max(0, Math.min(startX, gridElement.offsetWidth));
+        startY = Math.max(0, Math.min(startY, gridElement.offsetHeight));
+
         // 시각적 박스 초기화 및 표시
         updateDragBoxStyles(startX, startY, 0, 0);
         gridElement.appendChild(dragBoxElement);
@@ -81,9 +85,9 @@ function InputManager() {
         let currentX = (e.clientX - rect.left) / currentScale;
         let currentY = (e.clientY - rect.top) / currentScale;
 
-        // 그리드 경계 내로 제한
-        currentX = Math.max(0, Math.min(currentX, rect.width));
-        currentY = Math.max(0, Math.min(currentY, rect.height));
+        // 그리드 경계 내로 제한 (unscaled dimensions 사용)
+        currentX = Math.max(0, Math.min(currentX, gridElement.offsetWidth));
+        currentY = Math.max(0, Math.min(currentY, gridElement.offsetHeight));
 
         // 박스의 좌상단 모서리(left, top)와 크기(width, height) 계산
         const left = Math.min(startX, currentX);
