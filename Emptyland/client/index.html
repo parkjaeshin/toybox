@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emptyland</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 로비 오버레이 -->
+  <div id="lobby">
+    <div class="lobby-box">
+      <h1 class="logo">EMPTYLAND</h1>
+      <p class="subtitle">픽셀아트 멀티플레이 세계</p>
+      <div class="input-group">
+        <input
+          id="nicknameInput"
+          type="text"
+          maxlength="12"
+          placeholder="닉네임 입력..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="startBtn">입장</button>
+      </div>
+      <p class="hint">WASD 또는 방향키로 이동</p>
+    </div>
+  </div>
+
+  <!-- 게임 캔버스 -->
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <span id="hudNickname"></span>
+    <span id="hudPlayerCount"></span>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

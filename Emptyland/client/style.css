@@ -1,0 +1,177 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0d0d1a;
+  --surface: #12122a;
+  --border: #2a2a5a;
+  --accent: #7c5cbf;
+  --accent-glow: #a07de8;
+  --text: #e8e0ff;
+  --text-dim: #7a7ab0;
+  --pixel-font: 'Press Start 2P', monospace;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: var(--pixel-font);
+  color: var(--text);
+  image-rendering: pixelated;
+}
+
+/* ── 캔버스 ─────────────────────────────────── */
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* ── 로비 오버레이 ──────────────────────────── */
+#lobby {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #1a0f3a 0%, #0d0d1a 70%);
+}
+
+#lobby.hidden {
+  display: none;
+}
+
+.lobby-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 40px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  box-shadow:
+    0 0 0 1px #000,
+    0 0 40px rgba(124, 92, 191, 0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.logo {
+  font-size: clamp(20px, 4vw, 32px);
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow:
+    0 0 10px var(--accent-glow),
+    0 0 30px var(--accent-glow),
+    2px 2px 0 #000;
+  animation: flicker 4s infinite;
+}
+
+@keyframes flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.85; }
+  97% { opacity: 1; }
+  98% { opacity: 0.75; }
+  99% { opacity: 1; }
+}
+
+.subtitle {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.input-group {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  max-width: 360px;
+}
+
+#nicknameInput {
+  flex: 1;
+  padding: 14px 16px;
+  background: #0a0a1a;
+  border: 2px solid var(--border);
+  border-right: none;
+  color: var(--text);
+  font-family: var(--pixel-font);
+  font-size: 10px;
+  outline: none;
+  caret-color: var(--accent-glow);
+  transition: border-color 0.2s;
+}
+
+#nicknameInput::placeholder {
+  color: var(--text-dim);
+  font-size: 8px;
+}
+
+#nicknameInput:focus {
+  border-color: var(--accent);
+}
+
+#startBtn {
+  padding: 14px 20px;
+  background: var(--accent);
+  border: 2px solid var(--accent-glow);
+  color: #fff;
+  font-family: var(--pixel-font);
+  font-size: 9px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+#startBtn:hover {
+  background: var(--accent-glow);
+}
+
+#startBtn:active {
+  transform: scale(0.97);
+}
+
+.hint {
+  font-size: 7px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* ── HUD ────────────────────────────────────── */
+#hud {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: rgba(13, 13, 26, 0.8);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  font-size: 7px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+#hud.hidden {
+  display: none;
+}
+
+#hudNickname {
+  color: var(--text);
+}
+
+/* ── 유틸 ───────────────────────────────────── */
+.hidden {
+  display: none !important;
+}
