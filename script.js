@@ -1,23 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Hub page loaded');
-
-    // Add smooth landing animations for cards
     const cards = document.querySelectorAll('.card');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'all 0.5s ease ' + (index * 0.1) + 's';
-        
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100);
-    });
 
-    // Ripple effect on hover (optional but adds premium feel)
     cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            // Can add more micro-interactions here
+        card.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            const { left, top, width, height } = card.getBoundingClientRect();
+
+            // Calculate mouse position relative to card center
+            const x = (clientX - left) - width / 2;
+            const y = (clientY - top) - height / 2;
+
+            // Rotation intensity (30deg as requested)
+            const rotateX = (-y / height) * 30;
+            const rotateY = (x / width) * 30;
+
+            // Apply 5% scale + 3D rotation
+            card.style.transform = `scale(1.05) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            // Reset transform when mouse leaves
+            card.style.transform = `scale(1) rotateX(0deg) rotateY(0deg)`;
         });
     });
 });
