@@ -1,0 +1,359 @@
+:root {
+    --cell-size: 60px;
+    --grid-gap: 5px;
+    --grid-bg-color: #473d39;
+    --grid-cell-color: #000000;
+    --bg-color: #000000;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* 모바일 스크롤 방지 */
+    touch-action: none;
+    overflow: hidden;
+}
+
+
+.background {
+    position: absolute;
+    /* game-area 안에서 절대 위치 */
+    width: 150%;
+    /* 80%로 크기 줄임 */
+    height: 143%;
+    /*object-fit: cover;*/
+    /* 비율 유지하며 채우기 */
+    z-index: -1;
+    /* grid 아래로 배치 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 완벽 중앙 */
+    z-index: 1;
+    pointer-events: none;
+}
+
+.game-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    /* 모바일 스크롤 및 브라우저 제스처 방지 */
+    touch-action: none;
+}
+
+.grid-container {
+    display: grid;
+    /* CSS Grid는 자바스크립트에서 관리합니다. 기본은 7x7 또는 8x8로 설정 */
+    gap: var(--grid-gap);
+    background-color: var(--grid-bg-color);
+    padding: var(--grid-gap);
+    border-radius: 8px;
+    position: relative;
+    /* 자식 요소 절대 배치를 위해 */
+    overflow: hidden;
+    /* 요소가 밖으로 나가지 않도록 */
+}
+
+.grid-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: var(--grid-cell-color);
+    border-radius: 6px;
+}
+
+/* 오브젝트 스타일 (절대 배치되어 그리드 위를 떠다님) */
+.item-wrapper {
+    position: absolute;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    /* 셀 사이의 간격(gap)도 고려하여 위치를 잡아줍니다. */
+    transition: top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* 중력처럼 부드럽게 떨어지는 애니메이션 */
+    z-index: 10;
+}
+
+.item-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    /* 클릭 방해 방지 */
+    user-select: none;
+}
+
+.item-type-img {
+    z-index: 1;
+    /* 배경 (속성 이미지) */
+}
+
+.item-score-img {
+    z-index: 2;
+    /* 전경 (숫자 이미지) */
+    /* 숫자 이미지는 속성보다 약간 작게 표시하면 예쁩니다. (필요 시 조절 가능) */
+    /*transform: scale(0.85);*/
+}
+
+
+/* 게임 전체 래퍼 */
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 2;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    position: relative;
+}
+
+/* 상단 정보 영역 */
+.top-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 하단 정보 영역 */
+.bottom-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* 타이머 바 스타일 */
+.timer-container {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.timer-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.1s linear, background-color 0.3s;
+}
+
+.timer-bar.warning {
+    background-color: #ff9800;
+}
+
+.timer-bar.danger {
+    background-color: #f44336;
+}
+
+/* 튜토리얼 오버레이 */
+.tutorial-overlay {
+    position: absolute;
+    top: -10px;
+    /* padding offset */
+    left: -10px;
+    /* padding offset */
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    border-radius: 10px;
+}
+
+.tutorial-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tutorial-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: #ff1744;
+    border: 3px solid white;
+    border-radius: 50%;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    z-index: 2001;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s;
+    padding: 0;
+}
+
+.close-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+/* 오버레이 스크린 (시작/일시정지 화면) */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    /* 그리드 위 */
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
+}
+
+.start-btn {
+    padding: 15px 30px;
+    font-size: 24px;
+    background-color: #e91e63;
+    animation: pulse 1.5s infinite;
+}
+
+.start-btn:hover {
+    background-color: #c2185b;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.7);
+    }
+
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(233, 30, 99, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(233, 30, 99, 0);
+    }
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover:not(:disabled) {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* 드래그 박스 스타일 */
+#drag-box {
+    position: absolute;
+    /* gridContainer 내부에서의 절대 좌표 */
+    border: 2px solid rgba(0, 150, 255, 0.8);
+    background-color: rgba(0, 150, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.4);
+    pointer-events: none;
+    /* 드래그 도중 자기가 클릭되는 방지 */
+    z-index: 100;
+    /* 아이템들보다 무조건 위로 */
+}
+
+/* 컨트롤 패널 - 선택된 아이템 리스트 영역 */
+.selection-container {
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    min-height: 120px;
+}
+
+.selection-container h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+.items-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+/* 썸네일 스타일 */
+.selection-thumb {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.selection-thumb img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.selection-thumb .thumb-type {
+    z-index: 1;
+}
+
+.selection-thumb .thumb-score {
+    z-index: 2;
+}

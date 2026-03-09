@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사과 쓰리매치 서바이벌 테스트</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="game-wrapper">
+        <div id="tutorial-overlay" class="tutorial-overlay">
+            <div class="tutorial-content">
+                <img src="images/tutorial.png" alt="Tutorial" class="tutorial-img">
+                <button id="btn-close-tutorial" class="close-btn">×</button>
+            </div>
+        </div>
+        <div class="top-info">
+            <div class="score-container"
+                style="padding: 10px; background-color: #f0f0f0; border-radius: 5px; text-align: center; margin-bottom: 10px;">
+                <h3 style="margin: 0; color: #333;">총 점수: <span id="global-total-score"
+                        style="color: #e91e63; font-size: 24px;">0</span></h3>
+            </div>
+
+            <div id="selection-list" class="selection-container">
+                <h3>선택된 아이템 <span id="selection-score-total"
+                        style="font-size: 14px; color: #ff5722; margin-left: 5px;">(합계: 0)</span></h3>
+                <div id="selection-items-box" class="items-box">
+                    <!-- 자바스크립트가 여기에 아이템 썸네일을 렌더링합니다 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <img src="./images/gridframe.png" alt="" class="background">
+            <div id="grid" class="grid-container"></div>
+
+            <div id="start-screen" class="overlay-screen">
+                <button id="btn-start" class="start-btn">게임 시작</button>
+            </div>
+
+            <div id="pause-screen" class="overlay-screen" style="display: none; background-color: rgba(0,0,0,0.5);">
+                <h2 style="color: white; text-shadow: 2px 2px 4px #000;">일시정지됨</h2>
+            </div>
+        </div>
+
+        <div class="bottom-info">
+            <div class="timer-container">
+                <div id="timer-bar" class="timer-bar"></div>
+            </div>
+            <button id="btn-pause" class="pause-btn" disabled>일시정지</button>
+        </div>
+    </div>
+
+
+    <!-- 스크립트 로드 순서 유의 -->
+    <script src="object.js"></script>
+    <script src="inputManager.js"></script>
+    <script src="gridManager.js"></script>
+    <script src="gameManager.js"></script>
+</body>
+
+</html>
