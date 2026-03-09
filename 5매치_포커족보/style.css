@@ -104,6 +104,21 @@ body {
     /*transform: scale(0.85);*/
 }
 
+/* 터치 판정용 독립 히트박스 */
+.hitbox {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    /* 이미지들보다 앞으로 오게 해서 클릭/터치를 가장 먼저 받도록 함 */
+    /* 시각적 디버깅용 (필요 없으면 투명하게 처리) */
+    background-color: rgba(255, 0, 0, 0);
+    border-radius: 5px;
+}
+
 
 /* 게임 전체 래퍼 */
 .game-wrapper {
@@ -375,5 +390,59 @@ button:disabled {
 
     to {
         opacity: 1;
+    }
+}
+
+/* 점수 파티클 텍스트 효과 */
+.combo-text-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 초기 위치: 정중앙 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 500;
+    animation: floatUpFadeOut 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.combo-text-effect .combo-title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #ffd700;
+    /* 골드 색상 */
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 4px 10px rgba(0, 0, 0, 0.8);
+    margin-bottom: 5px;
+    font-style: italic;
+}
+
+.combo-text-effect .combo-score {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes floatUpFadeOut {
+    0% {
+        transform: translate(-50%, -30%) scale(0.5);
+        opacity: 0;
+    }
+
+    20% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+
+    40% {
+        transform: translate(-50%, -55%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -150%) scale(0.8);
+        opacity: 0;
     }
 }

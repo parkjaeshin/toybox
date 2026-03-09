@@ -34,7 +34,7 @@ function InputManager() {
         document.addEventListener('touchend', onMouseUp);
     }
 
-    // 마우스/터치 좌표 위치의 item-wrapper 반환
+    // 마우스/터치 좌표 위치의 item-wrapper 반환 (.hitbox 기준으로 판별)
     function getItemFromEvent(e) {
         let clientX = e.clientX;
         let clientY = e.clientY;
@@ -42,8 +42,11 @@ function InputManager() {
 
         const elements = document.elementsFromPoint(clientX, clientY);
         for (let el of elements) {
-            let wrapper = el.closest('.item-wrapper');
-            if (wrapper) return wrapper;
+            // hitbox 요소인지 먼저 확인
+            if (el.classList.contains('hitbox')) {
+                // hitbox의 부모인 item-wrapper를 반환
+                return el.closest('.item-wrapper');
+            }
         }
         return null;
     }
@@ -176,12 +179,21 @@ function InputManager() {
     }
 
     function check() {
-        // 기존 10점 룰 등 모두 제거
-        // 5개가 연결되었을 때 조건 없이 즉시 삭제
+        // 5개가 연결되었을 때 조건 없이 즉시 삭제 + 족보 판별
         if (selectedItemsList.length === 5) {
-            console.log("5개 연결 완료! 아이템 삭제");
+            console.log("5개 연결 완료! 족보 판별 시작");
+
+            // scoreManager.js에 5개의 아이템을 넘겨 점수 판별
+            let result = { score: 0, text: "" };
+            if (typeof ScoreManager !== 'undefined') {
+                result = ScoreManager.evaluate(selectedItemsList);
+            } else {
+                // scoreManager가 로드되지 않았다면 기본 100점
+                result.score = 100;
+            }
+
             if (typeof gridManager !== 'undefined') {
-                gridManager.addScore(100);
+                gridManager.addScore(result.score);
                 gridManager.removeItems(selectedItemsList);
             }
         }

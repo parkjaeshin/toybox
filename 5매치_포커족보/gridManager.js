@@ -102,8 +102,13 @@ function fillEmptySpaces() {
                 scoreImgElem.src = scoreImgUrl;
                 scoreImgElem.classList.add('item-score-img');
 
+                // 독립 히트박스 요소 생성
+                const hitboxElem = document.createElement('div');
+                hitboxElem.classList.add('hitbox');
+
                 itemWrapper.appendChild(typeImgElem);
                 itemWrapper.appendChild(scoreImgElem);
+                itemWrapper.appendChild(hitboxElem);
 
                 const leftPos = c * (cellSize + gap) + gap;
                 // 완전히 화면 위 보이지 않는 곳에서 낙하시작
