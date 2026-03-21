@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #080808;
+    background-image: radial-gradient(circle at center, #261e1a 0%, #080808 80%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Cinzel', serif;
+    overflow: hidden; /* 보드 바깥으로 카드가 넘어가도 스크롤 안생기게 함 */
+}
+
+/* The 3x3 Grid Board */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 120px);
+    grid-template-rows: repeat(4, 130px);
+    gap: 15px;
+    padding: 24px;
+    background-color: #141414;
+    border-radius: 8px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95),
+                inset 0 0 35px rgba(0, 0, 0, 0.9),
+                inset 0 0 2px rgba(255, 255, 255, 0.05);
+    border: 6px solid #1f1d1b;
+    border-top-color: #33302d;
+    border-left-color: #2b2826;
+    border-bottom-color: #121110;
+    border-right-color: #0c0b0a;
+}
+
+/* 바닥에 그려진 자리 (Markings) */
+.board-slot {
+    background: transparent;
+    border-radius: 6px;
+    border: 3px solid #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #444444; 
+    filter: url(#noise-smudge);
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+/* Board Slot Hover */
+.board-slot:hover {
+    border-color: #888888;
+    color: #aaaaaa;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+/* ------------------------------------- */
+/* 물리적인 카드 레이어 & 카드 스타일 */
+/* ------------------------------------- */
+#card-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* 클릭이 보드판으로 통과되도록 */
+    z-index: 50;
+}
+
+.physical-card {
+    position: absolute;
+    /* 새롭게 요청된 정확한 가로 100px, 세로 140px 고정 크기 적용 */
+    width: 100px;
+    height: 140px;
+    
+    border-radius: 6px;
+    background-color: #1a1a1a; /* 카드 뒷면/테두리 기본색 */
+    border: 2px solid #555;
+    
+    /* 실제 카드처럼 보드 위로 떠 있는 그림자 */
+    box-shadow: 5px 10px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05);
+    
+    pointer-events: auto; /* 카드는 클릭 가능 */
+    cursor: grab;
+    user-select: none;
+    
+    /* 부드러운 이동 애니메이션 */
+    transition: left 0.3s ease, top 0.3s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.physical-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 5px 15px 25px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.1);
+}
+
+.physical-card:active {
+    cursor: grabbing;
+    transform: translateY(0px) scale(1);
+    box-shadow: 2px 5px 8px rgba(0,0,0,0.9);
+}
+
+.physical-card img {
+    /* 카드의 고정 크기에 정확히 꽉 차도록 세팅 */
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 4px; /* 테두리 안쪽에 맞춤 */
+    display: block;
+}
+
+/* Toggle 기능은 이제 사이즈 제한을 풀었으므로 불필요하여 주석 처리/삭제 가능 */
+
+/* ------------------------------------- */
+/* 카드 능력치 스탯 마커 뱃지 (ATK, HP) */
+/* ------------------------------------- */
+.stat-badge {
+    position: absolute;
+    bottom: -8px;       /* 카드의 맨 아래 테두리에 겹치도록 약간 튀어나오게 배치 */
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-size: 1.2rem;
+    font-family: 'Cinzel', serif; /* 카드 테마 폰트 일치유지 */
+    font-weight: 900;
+    color: white;
+    
+    border: 3px solid #1a1a1a;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.8), inset 0 0 5px rgba(255,255,255,0.2);
+    
+    /* 드래그를 방해하지 않게 무시 처리 */
+    pointer-events: none;
+    z-index: 100;
+}
+
+.atk-badge {
+    left: -10px;
+    background: radial-gradient(circle at top left, #8c8c8c 0%, #3a3a3a 100%);
+    text-shadow: 1px 1px 2px #000;
+}
+
+.hp-badge {
+    right: -10px;
+    background: radial-gradient(circle at top left, #ff4d4d 0%, #aa0000 100%);
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* ------------------------------------- */
+/* UI 컨트롤 (턴 종료 버튼 등) */
+/* ------------------------------------- */
+#end-turn-btn {
+    position: absolute;
+    right: 5%; /* 화면 우측 끝에서 살짝 띄움 */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    width: 130px;
+    height: 130px;
+    border-radius: 50%; /* 둥근 동전/장식 모양 */
+    
+    background: radial-gradient(circle at top left, #362925 0%, #17110e 100%);
+    border: 4px solid #4a3e35;
+    
+    color: #e0d4c8;
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1.4;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    
+    cursor: pointer;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,255,255,0.05);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 150;
+    user-select: none;
+}
+
+#end-turn-btn span {
+    font-size: 0.9rem;
+    color: #9e8e82;
+}
+
+#end-turn-btn:hover {
+    background: radial-gradient(circle at top left, #4a3c36 0%, #211915 100%);
+    border-color: #736154;
+    transform: translateY(-50%) scale(1.08); /* 팝업 효과 */
+    box-shadow: 0 20px 45px rgba(0,0,0,1), inset 0 0 20px rgba(255,230,180,0.1);
+    color: #ffffff;
+}
+
+#end-turn-btn:active {
+    transform: translateY(-50%) scale(0.95); /* 꾹 눌리는 효과 */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,0,0,0.8);
+    border-color: #2b231d;
+    background: #120e0b;
+    color: #a39587;
+}
+
+/* ------------------------------------- */
+/* 플레이어 손패(Hand) 구조 및 스타일 */
+/* ------------------------------------- */
+#hand-container {
+    position: absolute;
+    bottom: -15px; /* 화면 하단에 살짝 걸치게 배치 */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    z-index: 200;
+}
+
+/* 손패 안에 들어있는 카드의 상태 */
+.physical-card.in-hand {
+    position: relative;
+    /* absolute 좌표 속성 무력화 (Flex에 의한 자동 정렬) */
+    left: auto !important;
+    top: auto !important;
+    
+    /* 겹침 효과 */
+    margin-left: -50px; 
+    
+    /* 약간의 부채꼴/회전 효과 (선택사항) */
+    transform-origin: bottom center;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.2s ease, z-index 0s;
+}
+
+.physical-card.in-hand:first-child {
+    margin-left: 0;
+}
+
+/* 손패 카드 호버 시 위로 솟구치며 전체 모습 보여주기 */
+.physical-card.in-hand:hover {
+    transform: translateY(-40px) scale(1.15) rotate(0deg) !important;
+    z-index: 300 !important;
+    /* 양 옆 카드들을 살짝 밀어내어 온전히 볼 수 있게 함 */
+    margin-right: 30px; 
+    box-shadow: 0 15px 30px rgba(0,0,0,1);
+}
